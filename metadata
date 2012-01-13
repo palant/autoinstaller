@@ -14,5 +14,7 @@ default=https://addons.mozilla.org/addon/autoinstaller/
 
 [compat]
 firefox=8.0/12.0a1
+fennec=8.0/11.0a1
+fennec2=11.0a1/12.0a1
 thunderbird=8.0/12.0a1
 seamonkey=2.5/2.9a1
