@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<!-- This Source Code is subject to the terms of the Mozilla Public License
+   - version 2.0 (the "License"). You can obtain a copy of the License at
+   - http://mozilla.org/MPL/2.0/. -->
+
+<!DOCTYPE vbox SYSTEM "chrome://autoinstaller/locale/settings.dtd">
+
+<vbox xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <setting pref="extensions.autoinstaller.serverPort" type="integer" title="&serverPort.label;">&serverPort.description;</setting>
+</vbox>

@@ -1,0 +1,2 @@
+content   autoinstaller chrome/content/
+locale    autoinstaller {{LOCALE}} chrome/locale/{{LOCALE}}/

@@ -1,0 +1,18 @@
+[general]
+id=autoinstaller@adblockplus.org
+basename=autoinstaller
+branchname=AUTOINSTALLER
+version=1.0a
+author=Wladimir Palant
+options=chrome://autoinstaller/content/settings.xul
+optionsType=2
+restartless=true
+nojar=true
+
+[homepage]
+default=https://addons.mozilla.org/addon/autoinstaller/
+
+[compat]
+firefox=8.0/12.0a1
+thunderbird=8.0/12.0a1
+seamonkey=2.5/2.9a1

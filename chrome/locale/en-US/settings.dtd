@@ -1,0 +1,2 @@
+<!ENTITY serverPort.label                 "Port to listen on">
+<!ENTITY serverPort.description           "The value 0 means that no connections are accepted">
