@@ -8,4 +8,5 @@
 
 <vbox xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <setting pref="extensions.autoinstaller.serverPort" type="integer" title="&serverPort.label;">&serverPort.description;</setting>
+  <setting pref="extensions.autoinstaller.allowedIPs" type="string" title="&allowedIPs.label;">&allowedIPs.description;</setting>
 </vbox>

@@ -22,6 +22,10 @@ function startup(params, reason)
   if (Services.vc.compare(Services.appinfo.platformVersion, "10.0") < 0)
     Components.manager.addBootstrappedManifestLocation(params.installPath);
 
+  let scope = {};
+  Services.scriptloader.loadSubScript("chrome://autoinstaller/content/prefLoader.js", scope);
+  scope.loadDefaultPrefs(params.installPath);
+
   PrefsObserver.init();
 }
 
@@ -66,6 +70,7 @@ var PrefsObserver =
 
   init: function()
   {
+    this.updateIPs();
     this.updatePort();
 
     Services.prefs.addObserver(this.branch, this, true);
@@ -80,13 +85,24 @@ var PrefsObserver =
 
   updatePort: function()
   {
-    let port = 0
+    let port = 0;
     try
     {
       port = Services.prefs.getIntPref(this.branch + "serverPort");
     } catch (e) {}
 
     Server.setPort(port);
+  },
+
+  updateIPs: function()
+  {
+    let ips = "127.0.0.1";
+    try
+    {
+      ips = Services.prefs.getCharPref(this.branch + "allowedIPs");
+    } catch (e) {}
+
+    Server.setAllowedIPs(ips);
   },
 
   observe: function(subject, topic, data)
@@ -96,6 +112,8 @@ var PrefsObserver =
 
     if (data == this.branch + "serverPort")
       this.updatePort();
+    if (data == this.branch + "allowedIPs")
+      this.updateIPs();
   },
 
   QueryInterface: XPCOMUtils.generateQI([Ci.nsISupportsWeakReference, Ci.nsIObserver])
@@ -104,6 +122,7 @@ var PrefsObserver =
 var Server =
 {
   socket: null,
+  allowedIPs: null,
 
   setPort: function(port)
   {
@@ -139,8 +158,24 @@ var Server =
     }
   },
 
+  setAllowedIPs: function(string)
+  {
+    this.allowedIPs = {};
+    let ips = string.split(/[\s,]+/);
+    for (let i = 0; i < ips.length; i++)
+      if (ips[i])
+        this.allowedIPs[ips[i]] = true;
+  },
+
   onSocketAccepted: function(server, transport)
   {
+    if (!(transport.host in this.allowedIPs))
+    {
+      Cu.reportError("Extension Auto-Installer: connection attempt from " + transport.host + " rejected, not in the list of allowed IP addresses.");
+      transport.close(Cr.NS_ERROR_FAILURE);
+      return;
+    }
+
     let response = "HTTP/1.1 500 No Content\r\nConnection: close\r\nContent-Length: 0\r\n\r\n";
     let responseStream = Cc["@mozilla.org/io/string-input-stream;1"].createInstance(Ci.nsIStringInputStream);
     responseStream.setData(response, response.length);
