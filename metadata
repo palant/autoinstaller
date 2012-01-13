@@ -2,7 +2,7 @@
 id=autoinstaller@adblockplus.org
 basename=autoinstaller
 branchname=AUTOINSTALLER
-version=1.1
+version=1.1.1a
 author=Wladimir Palant
 options=chrome://autoinstaller/content/settings.xul
 optionsType=2
