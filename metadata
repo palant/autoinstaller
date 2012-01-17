@@ -13,6 +13,7 @@ nojar=true
 default=https://addons.mozilla.org/addon/autoinstaller/
 
 [compat]
+toolkit=8.0/12.0a1
 firefox=8.0/12.0a1
 fennec=8.0/11.0a1
 fennec2=11.0a1/12.0a1
