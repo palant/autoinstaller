@@ -10,17 +10,12 @@ const Cu = Components.utils;
 
 Cu.import("resource://gre/modules/Services.jsm");
 
-function loadDefaultPrefs(installPath)
+exports.loadDefaultPrefs = loadDefaultPrefs;
+function loadDefaultPrefs()
 {
   try
   {
-    let baseURI = Services.io.newFileURI(installPath);
-    let uri;
-    if (installPath.isDirectory())
-      uri = Services.io.newURI("defaults/preferences/prefs.js", null, baseURI).spec;
-    else
-      uri = "jar:" + baseURI.spec + "!/defaults/preferences/prefs.js";
-
+    let uri = require("info").addonRoot + "defaults/preferences/prefs.js";
     let branch = Services.prefs.getDefaultBranch("");
     let scope =
     {

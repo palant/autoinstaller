@@ -9,117 +9,10 @@ const Ci = Components.interfaces;
 const Cu = Components.utils;
 const Cr = Components.results;
 
-Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource://gre/modules/XPCOMUtils.jsm");
 Cu.import("resource://gre/modules/NetUtil.jsm");
-Cu.import("resource://gre/modules/AddonManager.jsm");
 
-function install(params, reason) {}
-function uninstall(params, reason) {}
-
-function startup(params, reason)
-{
-  if (Services.vc.compare(Services.appinfo.platformVersion, "10.0") < 0)
-    Components.manager.addBootstrappedManifestLocation(params.installPath);
-
-  let scope = {};
-  Services.scriptloader.loadSubScript("chrome://autoinstaller/content/prefLoader.js", scope);
-  scope.loadDefaultPrefs(params.installPath);
-
-  PrefsObserver.init();
-}
-
-function shutdown(params, reason)
-{
-  PrefsObserver.shutdown();
-
-  if (Services.vc.compare(Services.appinfo.platformVersion, "10.0") < 0)
-    Components.manager.removeBootstrappedManifestLocation(params.installPath);
-}
-
-function installAddon(data)
-{
-  let url = "data:application/x-xpinstall," + escape(data);
-  AddonManager.getInstallForURL(url, function(install)
-  {
-    install.addListener({
-      onInstallEnded: function(install, addon)
-      {
-        install.removeListener(this);
-        if (addon.pendingOperations)
-        {
-          // Need to restart browser
-          Cc["@mozilla.org/toolkit/app-startup;1"]
-            .getService(Ci.nsIAppStartup)
-            .quit(Ci.nsIAppStartup.eAttemptQuit | Ci.nsIAppStartup.eRestart);
-        }
-      },
-      onInstallFailed: function(install)
-      {
-        install.removeListener(this);
-        Cu.reportError("Extension Auto-Install: installation failed (error " + install.error + ")");
-      }
-    });
-    install.install();
-  }, "application/x-xpinstall");
-}
-
-var PrefsObserver =
-{
-  branch: "extensions.autoinstaller.",
-
-  init: function()
-  {
-    this.updateIPs();
-    this.updatePort();
-
-    Services.prefs.addObserver(this.branch, this, true);
-  },
-
-  shutdown: function()
-  {
-    Services.prefs.removeObserver(this.branch, this);
-
-    Server.setPort(0);
-  },
-
-  updatePort: function()
-  {
-    let port = 0;
-    try
-    {
-      port = Services.prefs.getIntPref(this.branch + "serverPort");
-    } catch (e) {}
-
-    Server.setPort(port);
-  },
-
-  updateIPs: function()
-  {
-    let ips = "127.0.0.1";
-    try
-    {
-      ips = Services.prefs.getCharPref(this.branch + "allowedIPs");
-    } catch (e) {}
-
-    Server.setAllowedIPs(ips);
-  },
-
-  observe: function(subject, topic, data)
-  {
-    if (topic != "nsPref:changed")
-      return;
-
-    if (data == this.branch + "serverPort")
-      this.updatePort();
-    if (data == this.branch + "allowedIPs")
-      this.updateIPs();
-  },
-
-  QueryInterface: XPCOMUtils.generateQI([Ci.nsISupportsWeakReference, Ci.nsIObserver])
-};
-
-var Server =
+let Server = exports.Server =
 {
   socket: null,
   allowedIPs: null,
@@ -208,7 +101,7 @@ var Server =
         return;
       }
 
-      installAddon(data);
+      require("appIntegration").AppIntegration.installAddon(data);
     });
   },
 
