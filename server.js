@@ -101,7 +101,7 @@ let Server = exports.Server =
         return;
       }
 
-      require("appIntegration").AppIntegration.installAddon(data);
+      require("main").Main.installAddon(data);
     });
   },
 

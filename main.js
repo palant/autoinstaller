@@ -11,7 +11,7 @@ const Cr = Components.results;
 
 let {PrefsObserver} = require("prefsObserver");
 
-let AppIntegration = exports.AppIntegration =
+let Main = exports.Main =
 {
   init: function()
   {
