@@ -9,49 +9,47 @@ const Ci = Components.interfaces;
 const Cu = Components.utils;
 const Cr = Components.results;
 
-let {PrefsObserver} = require("prefsObserver");
+let {Prefs} = require("prefs");
+let {Server} = require("server");
 
-let Main = exports.Main =
+// Init server and make sure to react to pref changes.
+Server.setPort(Prefs.serverPort);
+Server.setAllowedIPs(Prefs.allowedIPs);
+Prefs.addListener(function(name)
 {
-  init: function()
+  if (name == "serverPort")
+    Server.setPort(Prefs.serverPort);
+  else if (name == "allowedIPs")
+    Server.setAllowedIPs(Prefs.allowedIPs);
+});
+onShutdown.add(function() Server.setPort(0));
+
+exports.installAddon = installAddon;
+function installAddon(data)
+{
+  Cu.import("resource://gre/modules/AddonManager.jsm");
+
+  let url = "data:application/x-xpinstall," + escape(data);
+  AddonManager.getInstallForURL(url, function(install)
   {
-    require("prefLoader").loadDefaultPrefs();
-    unrequire("prefLoader");
-
-    PrefsObserver.init();
-  },
-
-  shutdown: function()
-  {
-    PrefsObserver.shutdown();
-  },
-
-  installAddon: function(data)
-  {
-    Cu.import("resource://gre/modules/AddonManager.jsm");
-
-    let url = "data:application/x-xpinstall," + escape(data);
-    AddonManager.getInstallForURL(url, function(install)
-    {
-      install.addListener({
-        onInstallEnded: function(install, addon)
+    install.addListener({
+      onInstallEnded: function(install, addon)
+      {
+        install.removeListener(this);
+        if (addon.pendingOperations)
         {
-          install.removeListener(this);
-          if (addon.pendingOperations)
-          {
-            // Need to restart browser
-            Cc["@mozilla.org/toolkit/app-startup;1"]
-              .getService(Ci.nsIAppStartup)
-              .quit(Ci.nsIAppStartup.eAttemptQuit | Ci.nsIAppStartup.eRestart);
-          }
-        },
-        onInstallFailed: function(install)
-        {
-          install.removeListener(this);
-          Cu.reportError("Extension Auto-Install: installation failed (error " + install.error + ")");
+          // Need to restart browser
+          Cc["@mozilla.org/toolkit/app-startup;1"]
+            .getService(Ci.nsIAppStartup)
+            .quit(Ci.nsIAppStartup.eAttemptQuit | Ci.nsIAppStartup.eRestart);
         }
-      });
-      install.install();
-    }, "application/x-xpinstall");
-  }
+      },
+      onInstallFailed: function(install)
+      {
+        install.removeListener(this);
+        Cu.reportError("Extension Auto-Install: installation failed (error " + install.error + ")");
+      }
+    });
+    install.install();
+  }, "application/x-xpinstall");
 }
