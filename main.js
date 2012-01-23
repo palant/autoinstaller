@@ -4,11 +4,6 @@
  * http://mozilla.org/MPL/2.0/.
  */
 
-const Cc = Components.classes;
-const Ci = Components.interfaces;
-const Cu = Components.utils;
-const Cr = Components.results;
-
 let {Prefs} = require("prefs");
 let {Server} = require("server");
 
