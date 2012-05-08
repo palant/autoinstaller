@@ -24,7 +24,9 @@ function installAddon(data)
 {
   Cu.import("resource://gre/modules/AddonManager.jsm");
 
-  let url = "data:application/x-xpinstall," + escape(data);
+  // Addon manager stores the source URL in the database. Use custom protocol
+  // to "shorten" these URLs, otherwise the database will get big and slow.
+  let url = require("urlShortener").getShortURL("data:application/x-xpinstall," + escape(data));
   AddonManager.getInstallForURL(url, function(install)
   {
     install.addListener({
