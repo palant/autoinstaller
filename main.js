@@ -33,6 +33,20 @@ function installAddon(data)
       onInstallEnded: function(install, addon)
       {
         install.removeListener(this);
+
+        try
+        {
+          // Work-around for bug 752868 - remove unused locales from database
+          // to prevent it from slowing down.
+          let {XPIDatabase} = Cu.import("resource://gre/modules/XPIProvider.jsm", null);
+          let statement = XPIDatabase.connection.createStatement("delete from locale where id not in (select locale_id from addon_locale) and id not in (select defaultLocale from addon)");
+          statement.execute();
+        }
+        catch(e)
+        {
+          Cu.reportError(e);
+        }
+
         if (addon.pendingOperations)
         {
           // Need to restart browser
