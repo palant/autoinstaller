@@ -10,9 +10,8 @@ optionsType=2
 default=https://addons.mozilla.org/addon/autoinstaller/
 
 [compat]
-toolkit=8.0/22.0
-firefox=8.0/22.0
-fennec=8.0/22.0a
-fennec2=11.0a1/22.0
-thunderbird=8.0/22.0
-seamonkey=2.5/2.19
+toolkit=16.0/23.0
+firefox=16.0/23.0
+fennec2=16.0/23.0
+thunderbird=16.0/23.0
+seamonkey=2.13/2.20
