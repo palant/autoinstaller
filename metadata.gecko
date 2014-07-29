@@ -7,7 +7,7 @@ options=chrome://autoinstaller/content/settings.xul
 optionsType=2
 
 [homepage]
-default=https://addons.mozilla.org/addon/autoinstaller/
+default=https://github.com/palant/autoinstaller
 
 [compat]
 toolkit=16.0/34.0
