@@ -7,7 +7,6 @@ Prerequisites
 -------------
 * [Python 2.7](https://www.python.org/downloads/)
 * [Jinja2 module for Python](http://jinja.pocoo.org/docs/intro/#installation)
-* Adblock Plus build tools (clone https://github.com/adblockplus/buildtools.git into the `buildtools` subdirectory)
 
 How to build
 ------------
