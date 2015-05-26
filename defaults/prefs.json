@@ -1,0 +1,6 @@
+{
+  "defaults": {
+    "serverPort": 8888,
+    "allowedIPs": "127.0.0.1"
+  }
+}
