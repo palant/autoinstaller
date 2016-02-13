@@ -10,9 +10,9 @@ optionsType=2
 default=https://github.com/palant/autoinstaller
 
 [compat]
-toolkit=16.0/46.0
-firefox=16.0/46.0
+toolkit=16.0/48.0
+firefox=16.0/48.0
 fennec=16.0/40.0
-fennec2=16.0/46.0
-thunderbird=16.0/46.0
-seamonkey=2.13/2.42
+fennec2=16.0/48.0
+thunderbird=16.0/48.0
+seamonkey=2.13/2.45
