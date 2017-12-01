@@ -1,5 +1,7 @@
-Extension Auto-Installer
-=======================
+Extension Auto-Installer (DEPRECATED!)
+======================================
+
+**IMPORTANT**: This extension is deprecated, it will not work in Firefox 57 and above. Providing comparable functionality in newer Firefox versions isn't possible.
 
 Extension Auto-Installer is a helper for Firefox/SeaMonkey/Thunderbird extension developers: it allows automatically adding or updating browser extensions, e.g. via command line tools. This makes testing your changes easier. [Detailed description](https://palant.de/2012/01/13/extension-auto-installer)
 
